@@ -8,10 +8,10 @@ script:
   - docker run -e CI=true sumeetisp/react-test npm test
 
 after_success:
-  - docker build -t sumeetisp/multi-client -f ./client 
-  - docker build -t sumeetisp/multi-nginx -f ./nginx
-  - docker build -t sumeetisp/multi-server -f ./server
-  - docker build -t sumeetisp/multi-worker -f ./worker 
+  - docker build -t sumeetisp/multi-client ./client 
+  - docker build -t sumeetisp/multi-nginx ./nginx
+  - docker build -t sumeetisp/multi-server ./server
+  - docker build -t sumeetisp/multi-worker ./worker 
 
   - echo "$docker_password" | docker login -u "$docker_id" --password-stdin
   - docker push sumeetisp/multi-client

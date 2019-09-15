@@ -1,0 +1,20 @@
+sudo: required
+services:
+  - docker
+before_install:
+  - docker build -t sumeetisp/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true sumeetisp/react-test npm test
+
+after_success:
+  - docker build -t sumeetisp/multi-client -f ./client 
+  - docker build -t sumeetisp/multi-nginx -f ./nginx
+  - docker build -t sumeetisp/multi-server -f ./server
+  - docker build -t sumeetisp/multi-worker -f ./worker 
+
+  - echo "$docker_password" | docker login -u "$docker_id" --password-stdin
+  - docker push sumeetisp/multi-client
+  - docker push sumeetisp/multi-nginx
+  - docker push sumeetisp/multi-server
+  - docker push sumeetisp/multi-worker
